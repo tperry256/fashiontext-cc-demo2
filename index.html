@@ -376,7 +376,10 @@
             html += `<div class="toc-title">${escapeHtml(tocData.title)}</div>`;
             
             for (const section of tocData.sections) {
-                html += `<a href="#" class="toc-item" onclick="navigateToPageWithSectionScroll('${section.page_id}', '${escapeHtml(section.section_name)}')">${escapeHtml(section.section_name)} (page ${section.page_number})</a>`;
+                // Escape JavaScript strings properly for onclick attribute
+                const escapedPageId = section.page_id.replace(/'/g, "\\'");
+                const escapedSectionName = section.section_name.replace(/'/g, "\\'");
+                html += `<a href="#" class="toc-item" onclick="navigateToPageWithSectionScroll('${escapedPageId}', '${escapedSectionName}')">${escapeHtml(section.section_name)} (page ${section.page_number})</a>`;
             }
             
             html += '</div>';
@@ -540,6 +543,7 @@
         }
 
         function navigateToPageWithSectionScroll(pageId, sectionName) {
+            console.log('TOC Navigation:', {pageId, sectionName}); // Debug
             highlightState = null; // Clear any previous highlighting
             showPage(pageId);
             
@@ -549,6 +553,9 @@
                 const sectionTitles = document.querySelectorAll('.section-title');
                 let targetSection = null;
                 
+                console.log('Looking for section:', sectionName); // Debug
+                console.log('Available sections:', Array.from(sectionTitles).map(el => el.textContent.trim())); // Debug
+                
                 for (const titleElement of sectionTitles) {
                     if (titleElement.textContent.trim() === sectionName) {
                         targetSection = titleElement;
@@ -557,11 +564,13 @@
                 }
                 
                 if (targetSection) {
+                    console.log('Found section, scrolling'); // Debug
                     targetSection.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'  // Align to top of viewport
                     });
                 } else {
+                    console.log('Section not found, scrolling to top'); // Debug
                     // If section title not found on this page, scroll to top
                     window.scrollTo({
                         top: 0,
