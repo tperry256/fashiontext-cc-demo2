@@ -280,6 +280,19 @@
         <div class="content" id="content">
             <div class="loading">Loading content...</div>
         </div>
+
+        <!-- Footer navigation - same as header -->
+        <div class="navigation">
+            <div class="nav-left">
+                <div class="page-info" id="pageInfoFooter">Loading...</div>
+            </div>
+            <div class="nav-right">
+                <button class="nav-button" id="contentsBtnFooter" onclick="showContents()">CONTENTS</button>
+                <button class="nav-button" id="prevBtnFooter" onclick="navigatePage('prev')">← PREV</button>
+                <button class="nav-button" id="nextBtnFooter" onclick="navigatePage('next')">NEXT →</button>
+                <button class="nav-button" id="endingBtnFooter" onclick="navigatePage('last')">ENDING</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -443,7 +456,8 @@
             const paragraphIds = nodeIds.filter(id => id.startsWith('para_'));
             
             let contentHtml = `<div class="query-results">`;
-            contentHtml += `<div class="query-title">Results for "${word}" (${paragraphIds.length} matches)</div>`;
+            const highlightedWord = `<span class="query-highlight">${escapeHtml(word)}</span>`;
+            contentHtml += `<div class="query-title">Found: ${highlightedWord} (${paragraphIds.length} matches)</div>`;
             
             for (let i = 0; i < paragraphIds.length; i++) {
                 const paraId = paragraphIds[i];
@@ -587,17 +601,30 @@
 
         // Update navigation buttons
         function updateNavigation(currentIndex, totalPages) {
-            document.getElementById('pageInfo').textContent = `Page ${currentIndex + 1} of ${totalPages}`;
-            document.getElementById('prevBtn').disabled = currentIndex === 0;
-            document.getElementById('nextBtn').disabled = currentIndex === totalPages - 1;
+            const pageText = `Page ${currentIndex + 1} of ${totalPages}`;
+            document.getElementById('pageInfo').textContent = pageText;
+            document.getElementById('pageInfoFooter').textContent = pageText;
+            
+            const isPrevDisabled = currentIndex === 0;
+            const isNextDisabled = currentIndex === totalPages - 1;
+            
+            document.getElementById('prevBtn').disabled = isPrevDisabled;
+            document.getElementById('nextBtn').disabled = isNextDisabled;
+            document.getElementById('prevBtnFooter').disabled = isPrevDisabled;
+            document.getElementById('nextBtnFooter').disabled = isNextDisabled;
         }
 
         function updateNavigationForQuery(word, resultCount) {
             // Truncate word to 8 characters with ellipsis if needed
             const displayWord = word.length > 8 ? word.substring(0, 8) + '...' : word;
-            document.getElementById('pageInfo').textContent = `${displayWord} (${resultCount})`;
+            const queryText = `${displayWord} (${resultCount})`;
+            document.getElementById('pageInfo').textContent = queryText;
+            document.getElementById('pageInfoFooter').textContent = queryText;
+            
             document.getElementById('prevBtn').disabled = true;
             document.getElementById('nextBtn').disabled = true;
+            document.getElementById('prevBtnFooter').disabled = true;
+            document.getElementById('nextBtnFooter').disabled = true;
         }
 
         // Utility functions
