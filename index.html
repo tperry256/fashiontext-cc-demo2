@@ -625,7 +625,7 @@
         function updateNavigationForQuery(word, resultCount) {
             // Truncate word to 12 characters with ellipsis if needed
             const displayWord = word.length > 12 ? word.substring(0, 12) + '...' : word;
-            const queryText = `${displayWord} (${resultCount})`;
+            const queryText = `Found: ${displayWord} (${resultCount})`;
             document.getElementById('pageInfo').textContent = queryText;
             document.getElementById('pageInfoFooter').textContent = queryText;
             
