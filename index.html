@@ -456,7 +456,7 @@
             const paragraphIds = nodeIds.filter(id => id.startsWith('para_'));
             
             let contentHtml = `<div class="query-results">`;
-            const highlightedWord = `<span class="query-highlight">${escapeHtml(word)}</span>`;
+            const highlightedWord = `<span class="query-highlight">${word}</span>`;
             contentHtml += `<div class="query-title">Found: ${highlightedWord} (${paragraphIds.length} matches)</div>`;
             
             for (let i = 0; i < paragraphIds.length; i++) {
@@ -615,8 +615,8 @@
         }
 
         function updateNavigationForQuery(word, resultCount) {
-            // Truncate word to 8 characters with ellipsis if needed
-            const displayWord = word.length > 8 ? word.substring(0, 8) + '...' : word;
+            // Truncate word to 12 characters with ellipsis if needed
+            const displayWord = word.length > 12 ? word.substring(0, 12) + '...' : word;
             const queryText = `${displayWord} (${resultCount})`;
             document.getElementById('pageInfo').textContent = queryText;
             document.getElementById('pageInfoFooter').textContent = queryText;
